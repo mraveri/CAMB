@@ -7,6 +7,7 @@ import time
 import sys
 import shutil
 import copy
+import math
 from iniFile import iniFile
 
 parser = argparse.ArgumentParser(description='Run CAMB tests')
@@ -25,8 +26,8 @@ parser.add_argument('--num_diff', action='store_true', help='during diff_to prin
 parser.add_argument('--no_sources', action='store_true', help='turn off CAMB sources (counts/lensing/21cm) tests')
 parser.add_argument('--no_de', action='store_true', help='don''t run dark energy tests')
 parser.add_argument('--max_tests', type=int, help='maximum tests to run (for quick testing of pipeline)')
-
-
+parser.add_argument('--benchmark', action='store_true', help='runs benchmarker for precise performance measurements')
+parser.add_argument('--benchmark_repeats', type=int, help='number of times that the code is called to perform benchmarks [default: 10].')
 
 args = parser.parse_args()
 
@@ -225,6 +226,32 @@ def runScript(fname):
         res = e.output
         code = e.returncode
     return time.time() - now, res, code
+
+def benchmarkScript(fname, number_repeats=10):
+    times = []
+    for ind in xrange(number_repeats):
+        start = time.time()
+        try:
+            res  = str(subprocess.check_output([prog, fname]))
+            code = 0
+        except subprocess.CalledProcessError as e:
+            res  = e.output
+            code = e.returncode
+            break
+        end   = time.time()
+        times.append( end -start )
+    if len(times)>0:
+        mean_time = sum( times )/float(number_repeats)
+        if len(times)>1:
+            variance = sum([ (t-mean_time)**2 for t in times ])/float(number_repeats-1)
+            variance = math.sqrt(variance)
+        else:
+            variance  = 0.
+    else:
+        mean_time = 0.
+        variance  = 0.
+
+    return mean_time, variance, res, code
 
 def getInis(ini_dir):
     inis = []
@@ -623,6 +650,34 @@ if not args.no_run_test:
             errors += 1
             error_list.append(os.path.basename(ini))
             msg = '..no files in %.2fs' % timing
+        printlog(msg)
+        files = nfiles
+    printlog('Done, %s errors in %.2fs (outputs not checked)' % (errors, time.time() - start))
+    if errors:
+        printlog('Fails in : %s' % error_list)
+if args.benchmark:
+    errors = 0
+    files = output_file_num(out_files_dir)
+    if files:
+        printlog('Output directory is not empty (run with --clean to force delete): %s' % out_files_dir)
+        sys.exit()
+    number_repeats = 10
+    if args.benchmark_repeats is not None:
+        number_repeats = args.benchmark_repeats
+    start = time.time()
+    error_list = []
+    for ini in inis:
+        printlog(os.path.basename(ini) + '...')
+        mean_time, variance, output, return_code = benchmarkScript(ini, number_repeats=number_repeats)
+        if return_code:
+            printlog('error %s' % return_code)
+        nfiles = output_file_num(out_files_dir)
+        if nfiles > files:
+            msg = '..OK, produced %s files in %.2fs +- %.2fs' % (nfiles - files, mean_time, variance)
+        else:
+            errors += 1
+            error_list.append(os.path.basename(ini))
+            msg = '..no files in %.2fs +- %.2fs' % (mean_time, variance)
         printlog(msg)
         files = nfiles
     printlog('Done, %s errors in %.2fs (outputs not checked)' % (errors, time.time() - start))
