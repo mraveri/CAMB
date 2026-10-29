@@ -48,7 +48,9 @@ Transfer_Weyl = 10
 Transfer_Newt_vel_cdm = 11
 Transfer_Newt_vel_baryon = 12
 Transfer_vel_baryon_cdm = 13
-Transfer_max = Transfer_vel_baryon_cdm
+Transfer_Psi_N = 14
+Transfer_Phi_N = 15
+Transfer_max = Transfer_Phi_N
 
 # for 21cm case
 Transfer_monopole = 4
@@ -91,6 +93,8 @@ transfer_names = [
     "v_newtonian_cdm",
     "v_newtonian_baryon",
     "v_baryon_cdm",
+    "Psi_N",
+    "Phi_N",
 ]
 
 evolve_names = transfer_names + [

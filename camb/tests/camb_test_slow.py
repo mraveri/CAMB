@@ -198,6 +198,9 @@ class CambSlowTest(unittest.TestCase):
         self.assertTrue(np.allclose(ev[:, :, 2], ev[:, :, 3]))
         self.assertTrue(np.allclose(ev[:, :, 4], ev[:, :, 5]))
         self.assertTrue(np.allclose(ev[:, :, 6], ev[:, :, 7]))
+        ev = data.get_time_evolution(ks, tau, ["Psi_N", "Phi_N", s.k**2 * s.Psi_N, s.k**2 * s.Phi_N])
+        self.assertTrue(np.allclose(ev[:, :, 0], ev[:, :, 2]))
+        self.assertTrue(np.allclose(ev[:, :, 1], ev[:, :, 3]))
 
         pars = _planck_recfast_set_params(H0=67.5, ombh2=0.022, omch2=0.122, As=2e-9, ns=0.95)
         pars.set_accuracy(lSampleBoost=2)

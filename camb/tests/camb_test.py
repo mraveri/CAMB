@@ -848,6 +848,22 @@ class CambTest(unittest.TestCase):
         ix = 1
         self.assertAlmostEqual(transfer_k2[ix] * kh[ix] ** 2 * (pars.H0 / 100) ** 2, ev[ix, 1, 0], 4)
 
+    def testNewtonianPotentials(self):
+        pars = def_set_params(
+            H0=67.5, ombh2=0.022, omch2=0.122, As=2e-9, ns=0.95, redshifts=[0, 1], kmax=1, silent=True
+        )
+        # super-horizon radiation era: phi = (1 + 2 R_nu / 5) psi from neutrino anisotropic stress
+        ev = camb.get_background(pars).get_time_evolution([1e-3], [1.0], ["Psi_N", "Phi_N"])
+        rho_nu = 7 / 8 * (4 / 11) ** (4 / 3) * pars.N_eff
+        self.assertAlmostEqual(ev[0, 0, 1] / ev[0, 0, 0], 1 + 2 / 5 * rho_nu / (1 + rho_nu), places=4)
+        pars.WantCls = False
+        transfer = camb.get_transfer_functions(pars).get_matter_transfer_data().transfer_data
+        weyl = transfer[model.Transfer_Weyl - 1]
+        psi = transfer[model.Transfer_Psi_N - 1]
+        phi = transfer[model.Transfer_Phi_N - 1]
+        # the Weyl potential is the mean of the two Newtonian-gauge potentials
+        np.testing.assert_allclose((psi + phi) / 2, weyl, rtol=1e-5, atol=1e-6 * np.max(np.abs(weyl)))
+
     def testEvolutionRunSettings(self):
         # time evolution is of scalar modes, whatever modes the stored run wanted
         pars = def_set_params(H0=67.5, ombh2=0.022, omch2=0.122, As=2e-9, ns=0.965, silent=True)

@@ -3482,18 +3482,19 @@
     ! total perturbations with and without neutrinos, with neutrinos+dark energy in the numerator
         Transfer_Weyl = 10, & ! the Weyl potential, for lensing and ISW
         Transfer_Newt_vel_cdm = 11, Transfer_Newt_vel_baryon = 12, & ! -k v_Newtonian/H
-        Transfer_vel_baryon_cdm = 13 ! relative velocity of baryons and CDM
+        Transfer_vel_baryon_cdm = 13, & ! relative velocity of baryons and CDM
+        Transfer_Psi_N = 14, Transfer_Phi_N = 15 ! Newtonian-gauge acceleration and curvature potentials
     ! Sources
     ! Alternatively for 21cm
     integer, parameter :: Transfer_monopole = 4, Transfer_vnewt = 5, Transfer_Tmat = 6
 
-    integer, parameter :: Transfer_max = Transfer_vel_baryon_cdm
+    integer, parameter :: Transfer_max = Transfer_Phi_N
     character(len=name_tag_len) :: Transfer_name_tags(Transfer_max - 1) = &
         ['CDM     ', 'baryon  ', 'photon  ', 'nu      ', 'mass_nu ', 'total   ', &
-        'no_nu   ', 'total_de', 'Weyl    ', 'v_CDM   ', 'v_b     ', 'v_b-v_c ']
+        'no_nu   ', 'total_de', 'Weyl    ', 'v_CDM   ', 'v_b     ', 'v_b-v_c ', 'Psi_N   ', 'Phi_N   ']
     character(len=name_tag_len) :: Transfer21cm_name_tags(Transfer_max - 1) = &
         ['CDM      ', 'baryon   ', 'photon   ', 'monopole ', 'v_newt   ', 'delta_T_g', &
-        'no_nu    ', 'total_de ', 'Weyl     ', 'v_CDM    ', 'v_b      ', 'v_b-v_c  ']
+        'no_nu    ', 'total_de ', 'Weyl     ', 'v_CDM    ', 'v_b      ', 'v_b-v_c  ', 'Psi_N    ', 'Phi_N    ']
 
     logical :: transfer_interp_matterpower = .true. ! output regular grid in log k
     ! set to false to output calculated values for later interpolation

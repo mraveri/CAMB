@@ -26,13 +26,21 @@ v_newtonian_cdm         11     :math:`-v_{N,c}\, k/{\cal H}` (where :math:`v_{N,
                                Newtonian-gauge CDM velocity)
 v_newtonian_baryon      12     :math:`-v_{N,b}\,k/{\cal H}` (Newtonian-gauge baryon velocity :math:`v_{N,b}`)
 v_baryon_cdm            13     :math:`v_b-v_c`, relative baryon-CDM velocity
+Psi_N                   14     :math:`k^2\psi`, the Newtonian-gauge acceleration potential scaled by :math:`k^2`
+Phi_N                   15     :math:`k^2\phi`, the Newtonian-gauge curvature potential scaled by :math:`k^2`
 =====================  ======  =====================================================================
 
 The number here corresponds to a corresponding numerical index, in Fortran these are the same as *model.name*,
 where *name* are the Transfer_xxx variable names:
 Transfer_kh=1,Transfer_cdm=2, Transfer_b=3, Transfer_g=4, Transfer_r=5, Transfer_nu=6, Transfer_tot=7,
 Transfer_nonu=8, Transfer_tot_de=9, Transfer_Weyl=10, Transfer_Newt_vel_cdm=11, Transfer_Newt_vel_baryon=12,
-Transfer_vel_baryon_cdm = 13.
+Transfer_vel_baryon_cdm = 13, Transfer_Psi_N = 14, Transfer_Phi_N = 15.
+
+The Newtonian-gauge potentials :math:`\psi` and :math:`\phi` are those of :mod:`camb.symbolic` (``Psi_N`` and
+``Phi_N``). They differ from the Weyl potential by the total anisotropic stress :math:`\Pi`,
+:math:`\phi-\psi = \kappa a^2\Pi/k^2`, so that :math:`(\phi+\psi)/2=\Psi`. In the absence of anisotropic stress,
+for example at low redshift in standard cosmologies, Psi_N, Phi_N and Weyl coincide. The acceleration potential
+:math:`\psi` is the one that drives non-relativistic matter, whereas lensing depends on the Weyl potential.
 
 So for example, requesting var1='delta_b', var2='Weyl' or alternatively var1=model.Transfer_b, var2=model.Transfer_Weyl
 would get the power spectrum for the cross-correlation of the baryon density with the Weyl potential.
@@ -75,6 +83,8 @@ Transfer_Newt_vel_cdm      11     :math:`-v_{N,c}\, k/{\cal H}` (where :math:`v_
                                   Newtonian-gauge CDM velocity)
 Transfer_Newt_vel_baryon   12     :math:`-v_{N,b}\,k/{\cal H}` (Newtonian-gauge baryon velocity :math:`v_{N,b}`)
 Transfer_vel_baryon_cdm    13     :math:`v_b-v_c`, relative baryon-CDM velocity
+Transfer_Psi_N             14     :math:`k^2\psi`, the Newtonian-gauge acceleration potential scaled by :math:`k^2`
+Transfer_Phi_N             15     :math:`k^2\phi`, the Newtonian-gauge curvature potential scaled by :math:`k^2`
 ========================  ======  =====================================================================
 
 If use_21cm_mK is set the 21cm results are multiplied by :math:`T_b` to give results in mK units.

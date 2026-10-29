@@ -2862,6 +2862,10 @@
             EV%OutputTransfer(Transfer_tot_de) = dgrho/grho_matter
             ! Transfer_Weyl is k^2Phi, where Phi is the Weyl potential
             EV%OutputTransfer(Transfer_Weyl) = k2*phi
+            ! k^2 times the Newtonian-gauge potentials, which differ from the Weyl potential
+            ! by the total anisotropic stress: Psi_N = Phi - dgpi/2/k^2, Phi_N = Phi + dgpi/2/k^2
+            EV%OutputTransfer(Transfer_Psi_N) = k2*phi - dgpi/2
+            EV%OutputTransfer(Transfer_Phi_N) = k2*phi + dgpi/2
             EV%OutputTransfer(Transfer_Newt_vel_cdm) = -k*sigma/adotoa
             EV%OutputTransfer(Transfer_Newt_vel_baryon) = -k*(vb + sigma)/adotoa
             EV%OutputTransfer(Transfer_vel_baryon_cdm) = vb

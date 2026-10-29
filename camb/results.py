@@ -105,6 +105,8 @@ class MatterTransferData:
     - Transfer_Newt_vel_cdm = 11 (Newtonian CDM velocity)
     - Transfer_Newt_vel_baryon = 12 (Newtonian baryon velocity)
     - Transfer_vel_baryon_cdm = 13 (relative baryon-cdm velocity)
+    - Transfer_Psi_N = 14 (Newtonian-gauge acceleration potential)
+    - Transfer_Phi_N = 15 (Newtonian-gauge curvature potential)
 
 
     :ivar nq:  number of q modes calculated
